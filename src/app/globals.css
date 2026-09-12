@@ -1736,27 +1736,33 @@ small {
 .detail-actions .primary {
   flex: 1;
 }
-.proof-document {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 19px;
-  padding: 40px 20px;
-  color: #7892b8;
-}
+.proof-preview,
 .proof-image {
   margin-top: 20px;
   display: flex;
   flex-direction: column;
   gap: 15px;
+  align-items: center;
 }
 .proof-image img {
-  width: 100%;
+  display: block;
+  width: auto;
   height: auto;
-  max-height: 65vh;
+  max-width: 100%;
+  max-height: calc(100dvh - 250px);
   object-fit: contain;
   border-radius: 10px;
   background: #f3f5fb;
+}
+.proof-frame {
+  width: 100%;
+  height: min(65vh, 720px);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #f3f5fb;
+}
+.proof-download {
+  align-self: center;
 }
 .assign-list {
   display: flex;

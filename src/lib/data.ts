@@ -165,7 +165,12 @@ export async function publicReport(token: string) {
     transactions: transactions.map((t) => ({
       ...t,
       amount: String(t.amount),
-      proof_path: link.show_proof && t.proof_path ? "available" : null,
+      proof_path:
+        link.show_proof && t.proof_path
+          ? t.proof_path.toLowerCase().endsWith(".pdf")
+            ? "available.pdf"
+            : "available.image"
+          : null,
     })),
   };
 }

@@ -12,7 +12,7 @@ import {
   Eye,
   Pencil,
   Trash2,
-  FileText,
+  Download,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -318,6 +318,7 @@ export function TransactionDetail({
   const [proof, setProof] = useState(false),
     [broken, setBroken] = useState(false);
   const proofUrl = `/api/proof/${t.id}${token ? `?token=${encodeURIComponent(token)}` : ""}`;
+  const downloadUrl = `${proofUrl}${proofUrl.includes("?") ? "&" : "?"}download=1`;
   return (
     <>
       <div className={`detail-amount ${t.type}`}>
@@ -412,19 +413,20 @@ export function TransactionDetail({
               <p className="muted">
                 {dateLabel(t.transaction_date)} · {rupiah(t.amount)}
               </p>
-              {t.proof_path?.endsWith(".pdf") || token ? (
-                <div className="proof-document">
-                  <FileText size={48} />
-                  <h3>Dokumen bukti transaksi</h3>
+              {t.proof_path?.endsWith(".pdf") ? (
+                <div className="proof-preview">
+                  <iframe
+                    className="proof-frame"
+                    src={proofUrl}
+                    title="Bukti transaksi dalam format PDF"
+                  />
                   <a
-                    href={proofUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="button primary"
+                    href={downloadUrl}
+                    download
+                    className="button secondary proof-download"
                   >
-                    Buka bukti <ArrowUpRight size={16} />
+                    <Download size={16} /> Unduh bukti
                   </a>
-                  <p className="muted">Bukti dibuka di tab baru.</p>
                 </div>
               ) : (
                 <div className="proof-image">
@@ -434,12 +436,11 @@ export function TransactionDetail({
                     onError={() => setBroken(true)}
                   />
                   <a
-                    className="button secondary"
-                    href={proofUrl}
-                    target="_blank"
-                    rel="noreferrer"
+                    className="button secondary proof-download"
+                    href={downloadUrl}
+                    download
                   >
-                    Buka ukuran penuh
+                    <Download size={16} /> Unduh bukti
                   </a>
                 </div>
               )}
