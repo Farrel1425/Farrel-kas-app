@@ -42,27 +42,18 @@ export async function GET(
     if (projectId) query = query.eq("project_id", projectId);
     const { data: transaction } = await query.maybeSingle();
     if (!transaction?.proof_path) return missing();
-    const { data: file, error } = await client.storage
-      .from("transaction-proofs")
-      .download(transaction.proof_path);
-    if (error || !file) return missing();
     const ext = transaction.proof_path.split(".").pop();
     const download = request.nextUrl.searchParams.get("download") === "1";
-    const mime =
-      ext === "pdf"
-        ? "application/pdf"
-        : ext === "png"
-          ? "image/png"
-          : "image/jpeg";
-    return new NextResponse(file, {
-      headers: {
-        "Content-Type": mime,
-        "Content-Disposition": `${download ? "attachment" : "inline"}; filename="bukti-${id}.${ext}"`,
-        "Cache-Control": "private, no-store, max-age=0",
-        "X-Content-Type-Options": "nosniff",
-        "Content-Security-Policy": "default-src 'none'; sandbox",
-      },
-    });
+    const filename = `bukti-${id}.${ext ?? "file"}`;
+    const { data: signed, error } = await client.storage
+      .from("transaction-proofs")
+      .createSignedUrl(transaction.proof_path, 300, {
+        download: download ? filename : false,
+      });
+    if (error || !signed?.signedUrl) return missing();
+    const response = NextResponse.redirect(signed.signedUrl, 307);
+    response.headers.set("Cache-Control", "private, max-age=60");
+    return response;
   } catch {
     return missing();
   }
