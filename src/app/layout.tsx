@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import "./globals.css";
 export const metadata: Metadata = {
   title: {
-    default: "FARREL KAS — Setiap rupiah, tercatat.",
+    default: "APLIKASI KAS FARREL",
     template: "%s | FARREL KAS",
   },
   description:
-    "Buku kas sederhana untuk setiap proyek dan kegiatan. Catat pemasukan, pengeluaran, dan bagikan laporan dengan mudah.",
+    "Aplikasi keuangan yang TRANSPARAN",
   robots: { index: false, follow: false },
 };
 export default function RootLayout({
